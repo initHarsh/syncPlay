@@ -1,0 +1,11 @@
+{
+  "name": "syncplay",
+  "version": "1.0.0",
+  "description": "browser based video sync player for multiple clients",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Harsh",
+  "license": "ISC"
+}

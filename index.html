@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sync Play</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			background-color: #CFFDE1;
+		}
+		.nav{
+			background-color: #FED049;
+			color:#3D5656;
+			font-size: 26px;
+			text-align: center;
+			padding: 4px;
+			border-radius: 0px 0px 20px 20px;
+		}
+		.videoBox{
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+		.userListContainer{
+			border-top: 2px solid black;
+			color: #3D5656;
+			margin-top: 20px;
+			margin-bottom: 20px;
+			padding: 10px;
+			font-size: 20px;
+		}
+		.userList{
+			font-size: 16px;
+		}
+		.userBox{
+		  border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+<nav class="nav">Sync Play</nav>
+
+<div class="videoBox">
+	<video class="video" preload="auto" src="/j.mp4" width="100%" controls=""></video>
+</div>
+
+<div class="videoSelectBox">
+	<input type="file" class="inputVideo" name="" accept="video/*,audio/*">
+</div>
+
+
+<div class="userListContainer">
+	<div>Users List -</div>
+	<div class="userList">Chrome</div>
+</div>
+<div class="logBox"></div>
+
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script type="text/javascript">
+    
+  var socket=io()
+  
+  socket.on('user updates', function(users) {
+    document.querySelector(".userList").innerHTML=""
+    users.forEach((user)=>{
+      let div = document.createElement("div")
+      div.className = "userBox"
+      div.innerHTML = "User Id : "+user.id +"<br> File Selected :"+user.fileName
+      document.querySelector(".userList").appendChild(div)
+    })
+      
+    });
+  
+  
+  
+	var URL = window.URL || window.webkitURL	
+	var video = document.querySelector(".video") 
+	var inputVideo = document.querySelector('.inputVideo')
+
+	 var showMsg = function(message, isError) {
+    	var element = document.querySelector('.logBox')
+    	element.innerHTML += message
+    	//element.className = isError ? 'error' : 'info'
+  	}
+
+
+    inputVideo.addEventListener('change',()=>{
+	  	var file = inputVideo.files[0]
+	    var canPlay = video.canPlayType(file.type)
+	    if (canPlay === '') canPlay = 'no'
+
+	    var message = 'Can play type "' + file.type + '": ' + canPlay
+	    var isError = canPlay === 'no'
+	    showMsg(message, isError)
+	    console.log(file)
+
+	    if (isError) {
+	      return
+	    }
+
+	    var fileURL = URL.createObjectURL(file)
+	    video.src = fileURL
+	    socket.emit("file loaded",file.name)
+  	})
+   
+   
+   video.addEventListener('play',()=>{
+      
+	    socket.emit("play",video.currentTime)
+
+    })
+     video.addEventListener('pause',()=>{
+        
+	     socket.emit("pause",video.currentTime)
+    })
+        
+  socket.on("play",(msg)=>{
+    video.currentTime=msg
+    video.play()
+  })
+  
+  socket.on("pause",(msg)=>{
+    video.currentTime=msg
+    video.pause()
+  })
+</script>
+
+</body>
+</html>
