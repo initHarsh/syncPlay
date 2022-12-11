@@ -19,6 +19,13 @@
 			padding: 4px;
 			border-radius: 0px 0px 20px 20px;
 		}
+		.footer {
+		  background-color: #FED049;
+			color:#3D5656;
+			font-size: 26px;
+			text-align: center;
+			padding: 4px;
+		}
 		.videoBox{
 			margin-top: 20px;
 			margin-bottom: 20px;
@@ -56,8 +63,8 @@
 	<div class="userList">Chrome</div>
 </div>
 <div class="logBox"></div>
-
-
+V1.0.0
+<footer class="footer">Created by - Harsh </footer>
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 <script type="text/javascript">
     
@@ -126,6 +133,11 @@
     video.currentTime=msg
     video.pause()
   })
+  
+  document.querySelector(".footer").addEventListener("click",()=>{
+    alert("Created on 11-dec-2022 6:00am - 9:37am + hosted on syncplay.glitch.me ")
+  })
+  // Created on 11-dec-2022 6:00am - 9:37am + hosted on syncplay.glitch.me
 </script>
 
 </body>
